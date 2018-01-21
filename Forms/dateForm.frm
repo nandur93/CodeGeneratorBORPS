@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} dateForm 
    Caption         =   "Production Code Generator"
-   ClientHeight    =   3270
+   ClientHeight    =   2760
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   4470
+   ClientWidth     =   4320
    OleObjectBlob   =   "dateForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -26,34 +26,69 @@ Private Sub ButtonAbout_Click()
     msg = MsgBox("Developed by NDU", vbInformation, "Code Generator V1.0")
 End Sub
 
-Private Sub ButtonClear_Click()
-    TextBoxTanggalForm = ""
-    CheckBoxBesok.Enabled = False
-    CheckBoxTanggalForm.Enabled = False
-End Sub
-
 Private Sub CheckBoxBesok_Click()
-If CheckBoxBesok = True Then
-        With TextBoxTanggalForm
-            .Enabled = True
-            .Value = DateAdd("d", 1, TextBoxDate)
-        End With
-        TextBoxTanggalForm = Format(TextBoxTanggalForm, "dd/mmm/yyyy")
-            CheckBoxTanggalForm.Value = False
-            ElseIf CheckBoxBesok = False Then
-        TextBoxTanggalForm.Enabled = False
-    End If
-End Sub
-
-Private Sub CheckBoxTanggalForm_Click()
-    If CheckBoxTanggalForm = True Then
-        With TextBoxTanggalForm
-            .Enabled = False
-            .Value = Format(TextBoxDate, "dd/mmm/yyyy")
-        End With
-        CheckBoxBesok.Value = False
-            ElseIf CheckBoxTanggalForm = False Then
-        TextBoxTanggalForm.Enabled = True
+    If LabelTodayNow.Caption = "Sunday" _
+        Or LabelTodayNow.Caption = "Monday" _
+        Or LabelTodayNow.Caption = "Tuesday" _
+        Or LabelTodayNow.Caption = "Wednesday" _
+        Or LabelTodayNow.Caption = "Thursday" _
+        Or LabelTodayNow.Caption = "Friday" _
+        Or LabelTodayNow.Caption = "Saturday" Then
+        If CheckBoxBesok.Value = True Then 'jika cek aktif
+                If TextBoxDate = "" Then
+                    With TextBoxTanggalForm
+                        .Enabled = True
+                        .Value = DateAdd("d", 1, TextBoxTanggalBO) 'maka tanggal + 1
+                    End With
+                Else
+                    With TextBoxTanggalForm
+                        .Enabled = True
+                        .Value = DateAdd("d", 1, TextBoxDate) 'maka tanggal + 1
+                    End With
+                End If
+            TextBoxTanggalForm = Format(TextBoxTanggalForm, "mm/dd/yy")
+        ElseIf CheckBoxBesok.Value = False Then 'jika cek tidak aktif
+                If TextBoxDate = "" Then
+                    With TextBoxTanggalForm
+                        .Enabled = True
+                        .Value = DateAdd("d", 0, TextBoxTanggalBO) 'maka tanggal tetap
+                    End With
+                Else
+                    With TextBoxTanggalForm
+                        .Enabled = True
+                        .Value = DateAdd("d", 0, TextBoxDate) 'maka tanggal tetap
+                    End With
+                End If
+            TextBoxTanggalForm = Format(TextBoxTanggalForm, "mm/dd/yy")
+        End If
+    Else
+        If CheckBoxBesok.Value = True Then 'jika cek aktif
+                If TextBoxDate = "" Then
+                    With TextBoxTanggalForm
+                        .Enabled = True
+                        .Value = DateAdd("d", 1, TextBoxTanggalBO) 'maka tanggal + 1
+                    End With
+                Else
+                    With TextBoxTanggalForm
+                        .Enabled = True
+                        .Value = DateAdd("d", 1, TextBoxDate) 'maka tanggal + 1
+                    End With
+                End If
+            TextBoxTanggalForm = Format(TextBoxTanggalForm, "dd/mm/yy")
+        ElseIf CheckBoxBesok.Value = False Then 'jika cek tidak aktif
+                If TextBoxDate = "" Then
+                    With TextBoxTanggalForm
+                        .Enabled = True
+                        .Value = DateAdd("d", 0, TextBoxTanggalBO) 'maka tanggal tetap
+                    End With
+                Else
+                    With TextBoxTanggalForm
+                        .Enabled = True
+                        .Value = DateAdd("d", 0, TextBoxDate) 'maka tanggal tetap
+                    End With
+                End If
+            TextBoxTanggalForm = Format(TextBoxTanggalForm, "dd/mm/yy")
+        End If
     End If
 End Sub
 
@@ -125,30 +160,46 @@ Cells.Find(What:="LINE J", After:=ActiveCell, LookIn:=xlFormulas, LookAt _
 End If
 End Sub
 
-Private Sub TextBoxDate_Change()
-    TextBoxTanggalBO = Format(TextBoxDate, "dd/mmm/yyyy")
+Private Sub LabelDateNow_Click()
+    TextBoxDate = Format(Now)
+    CheckBoxBesok.Value = False
 End Sub
+
+Private Sub LabelTodayNow_Click()
+    TextBoxDate = Format(Now)
+    CheckBoxBesok.Value = False
+End Sub
+
+Private Sub TextBoxDate_Change()
+    CheckBoxBesok.Value = False
+        If LabelTodayNow.Caption = "Sunday" _
+            Or LabelTodayNow.Caption = "Monday" _
+            Or LabelTodayNow.Caption = "Tuesday" _
+            Or LabelTodayNow.Caption = "Wednesday" _
+            Or LabelTodayNow.Caption = "Thursday" _
+            Or LabelTodayNow.Caption = "Friday" _
+            Or LabelTodayNow.Caption = "Saturday" Then
+                TextBoxTanggalBO = Format(TextBoxDate, "mm/dd/yy")
+                TextBoxTanggalForm = Format(TextBoxDate, "mm/dd/yy")
+                    Else
+                TextBoxTanggalBO = Format(TextBoxDate, "dd/mm/yy")
+                TextBoxTanggalForm = Format(TextBoxDate, "dd/mm/yy")
+        End If
+End Sub
+
+'Private Sub TextBoxDate_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+'    CheckBoxBesok.Value = False
+'    TextBoxTanggalBO = Format(TextBoxDate, "dd/mm/yy")
+'    TextBoxTanggalForm = Format(TextBoxDate, "dd/mm/yy")
+'End Sub
 
 Private Sub TextBoxTanggalBO_Change()
 If TextBoxTanggalBO = "" Then
     CheckBoxBesok.Enabled = False
-    CheckBoxTanggalForm.Enabled = False
-        Else
+            Else
     CheckBoxBesok.Enabled = True
-    CheckBoxTanggalForm.Enabled = True
 End If
-TextBoxTanggalForm = TextBoxTanggalBO
-End Sub
-
-Private Sub TextBoxTanggalBO_Exit(ByVal Cancel As MSForms.ReturnBoolean)
-If TextBoxTanggalBO = "" Then
-    CheckBoxBesok.Enabled = False
-    CheckBoxTanggalForm.Enabled = False
-        Else
-    CheckBoxBesok.Enabled = True
-    CheckBoxTanggalForm.Enabled = True
-End If
-TextBoxTanggalForm = Format(TextBoxTanggalForm, "dd/mmm/yyyy")
+CheckBoxBesok.Value = False
 TextBoxTanggalForm = TextBoxTanggalBO
 End Sub
 
@@ -156,12 +207,13 @@ Private Sub UserForm_Initialize()
 With dateForm
 Judul
 End With
+LabelTodayNow.Caption = Format(Now, "dddd")
+LabelDateNow = Format(Now, "dd/mm/yyyy")
 
     Windows("ALL NEW VERIFIKASI KODE (DILARANG DI COPY).xlsx").Activate
     Sheets("RPS").Select
     
     CheckBoxBesok.Enabled = False
-    CheckBoxTanggalForm.Enabled = False
 
 With ComboBoxLineSachet
     .AddItem "A"
@@ -225,7 +277,17 @@ Dim msg As Integer
             Else
             Windows("ALL NEW VERIFIKASI KODE (DILARANG DI COPY).xlsx").Activate
             Sheets("MASTER").Select
-            Range("D6") = Format(TextBoxTanggalBO, "mm/dd/yy")
+                        If LabelTodayNow.Caption = "Sunday" _
+                            Or LabelTodayNow.Caption = "Monday" _
+                            Or LabelTodayNow.Caption = "Tuesday" _
+                            Or LabelTodayNow.Caption = "Wednesday" _
+                            Or LabelTodayNow.Caption = "Thursday" _
+                            Or LabelTodayNow.Caption = "Friday" _
+                            Or LabelTodayNow.Caption = "Saturday" Then
+                    Range("D6") = Format(TextBoxTanggalBO, "mm/dd/yyyy")
+                                Else
+                            Range("D6") = Format(TextBoxTanggalBO, "dd/mm/yyyy")
+                        End If
             Range("D10") = ComboBoxLineSachet
                 If TextBoxNoBO = vbNullString Then
                     Range("D26").ClearContents
@@ -239,7 +301,17 @@ Dim msg As Integer
                 End If
             Range("D31") = TextBoxChangeOver
             Range("E31") = TextBoxMaterial
-            Range("D32") = Format(TextBoxTanggalForm, "mm/dd/yy")
+                        If LabelTodayNow.Caption = "Sunday" _
+                            Or LabelTodayNow.Caption = "Monday" _
+                            Or LabelTodayNow.Caption = "Tuesday" _
+                            Or LabelTodayNow.Caption = "Wednesday" _
+                            Or LabelTodayNow.Caption = "Thursday" _
+                            Or LabelTodayNow.Caption = "Friday" _
+                            Or LabelTodayNow.Caption = "Saturday" Then
+                            Range("D32") = Format(TextBoxTanggalForm, "mm/dd/yyyy")
+                                Else
+                            Range("D32") = Format(TextBoxTanggalForm, "dd/mm/yyyy")
+                        End If
             Unload Me
     End If
 End Sub
@@ -282,7 +354,7 @@ Dim rRange As Range
         Application.DisplayAlerts = False
 
             Set rRange = Application.InputBox(Prompt:= _
-                "Klik NO BO Pada RPS", _
+                "Klik NO BO Pada RPS" & vbNewLine & "(Kolom Wajib Diisi)", _
                     Title:="BO Yang Ready", Type:=8)
     On Error GoTo 0
 
